@@ -9,4 +9,9 @@ public class Player : Algorithm
     {
         return Vector2Int.zero;
     }
+
+    public override int ChangeTurn(int actualPlayer)
+    {
+        return actualPlayer == 1 ? 2 : 1;
+    }
 }

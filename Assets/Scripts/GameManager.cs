@@ -39,6 +39,7 @@ public class GameManager : MonoBehaviour
         GameObject tokenInstance = Instantiate(tokenPrefab, spawnPosition, Quaternion.identity);
 
         tokenInstance.GetComponent<SpriteRenderer>().color = currentPlayer == 1 ? Color.red : Color.yellow;
+        tokenInstance.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
         // Establecer el tablero (boardSpawner) como el padre del token
         tokenInstance.transform.SetParent(boardSpawner.transform, false);

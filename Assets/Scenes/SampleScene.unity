@@ -154,8 +154,8 @@ MonoBehaviour:
   validPos: []
   boardSpawner: {fileID: 663356714}
   tokenPrefab: {fileID: 1656482233619238161, guid: fef42742860bf284ab0a3fbf819ec7b1, type: 3}
-  player1: {fileID: 11400000, guid: 315df3f4af9edd245b59f07777c6c258, type: 2}
-  player2: {fileID: 11400000, guid: 315df3f4af9edd245b59f07777c6c258, type: 2}
+  player1: {fileID: 0}
+  player2: {fileID: 0}
 --- !u!4 &12869465
 Transform:
   m_ObjectHideFlags: 0
@@ -1387,7 +1387,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 1
+  m_IsActive: 0
 --- !u!114 &902482100
 MonoBehaviour:
   m_ObjectHideFlags: 0
