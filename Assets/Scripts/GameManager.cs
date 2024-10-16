@@ -1,6 +1,7 @@
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using UnityEngine.UI;
 
 public class GameManager : MonoBehaviour
 {
@@ -12,8 +13,12 @@ public class GameManager : MonoBehaviour
     [SerializeField] private GameObject tokenPrefab;
 
     private int currentPlayer = 1;
+    public bool canPlay = true;
     [SerializeField] private Algorithm player1, player2;
+    public Algorithm Player1 { get { return player1; } }
+    public Algorithm Player2 { get { return player2; } }
 
+    public PlayerSelector playerSelector;
 	private void Awake()
 	{
 		validPos = new Vector2 [boardSpawner.NumColumns];
@@ -34,6 +39,8 @@ public class GameManager : MonoBehaviour
 
     public void PlaceToken(int column)
     {
+        canPlay = false;
+
         // Instanciar el token en la parte superior de la columna seleccionada
         Vector3 spawnPosition = new Vector3(column, boardSpawner.NumRows, 0); // Parte superior
         GameObject tokenInstance = Instantiate(tokenPrefab, spawnPosition, Quaternion.identity);
@@ -53,9 +60,6 @@ public class GameManager : MonoBehaviour
 
         // Actualizar la posición válida de la columna
         validPos[column] = new Vector2(column, validPos[column].y + 1);
-
-        // Cambiar de turno
-        currentPlayer = (currentPlayer == 1) ? 2 : 1;
     }
 
     private IEnumerator MoveToken(GameObject token, Vector2 targetPosition)
@@ -72,6 +76,17 @@ public class GameManager : MonoBehaviour
         }
 
         token.transform.position = targetPosition;  // Asegurar que el token llegue a la posición final
+
+        // Cambiar de turno
+        currentPlayer = (currentPlayer == 1) ? 2 : 1;
+
+        canPlay = true;
+    }
+
+    public void StartMatch()
+    {
+        player1 = playerSelector.AlgorithmOptions[playerSelector.Dropdown1.value];
+        player2 = playerSelector.AlgorithmOptions[playerSelector.Dropdown2.value];
     }
 
     public int GetCurrentPlayer()

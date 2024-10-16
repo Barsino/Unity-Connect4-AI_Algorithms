@@ -40,13 +40,19 @@ public class Tile : MonoBehaviour
     }
 	public void OnMouseDown()
 	{
-        if (!isOccupied)
+        if(gameManager.Player1.GetType() == typeof (Player))
         {
-            // Verificar si el clic corresponde a una posición válida
-            if (InValidPos(gameManager.ValidPos))
+            if (!isOccupied)
             {
-                gameManager.PlaceToken((int)boardPos.x);  // Llamar al GameManager para colocar el token
-                isOccupied = true;
+                if (gameManager.canPlay)
+                {
+                    // Verificar si el clic corresponde a una posición válida
+                    if (InValidPos(gameManager.ValidPos))
+                    {
+                        gameManager.PlaceToken((int)boardPos.x);  // Llamar al GameManager para colocar el token
+                        isOccupied = true;
+                    }
+                }
             }
         }
     }

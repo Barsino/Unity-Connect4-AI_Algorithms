@@ -154,8 +154,10 @@ MonoBehaviour:
   validPos: []
   boardSpawner: {fileID: 663356714}
   tokenPrefab: {fileID: 1656482233619238161, guid: fef42742860bf284ab0a3fbf819ec7b1, type: 3}
+  canPlay: 1
   player1: {fileID: 0}
   player2: {fileID: 0}
+  playerSelector: {fileID: 1650882574}
 --- !u!4 &12869465
 Transform:
   m_ObjectHideFlags: 0
@@ -1217,7 +1219,7 @@ MonoBehaviour:
   m_OnCullStateChanged:
     m_PersistentCalls:
       m_Calls: []
-  m_text: Player 2
+  m_text: 
   m_isRightToLeft: 0
   m_fontAsset: {fileID: 11400000, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
   m_sharedMaterial: {fileID: 2180264, guid: 8f586378b4e144a9851e7b34d9b748ee, type: 2}
@@ -1387,7 +1389,7 @@ GameObject:
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
-  m_IsActive: 0
+  m_IsActive: 1
 --- !u!114 &902482100
 MonoBehaviour:
   m_ObjectHideFlags: 0
@@ -2169,6 +2171,7 @@ GameObject:
   serializedVersion: 6
   m_Component:
   - component: {fileID: 1650882573}
+  - component: {fileID: 1650882574}
   m_Layer: 0
   m_Name: Selector
   m_TagString: Untagged
@@ -2194,6 +2197,25 @@ Transform:
   - {fileID: 2011879169}
   m_Father: {fileID: 902482103}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
+--- !u!114 &1650882574
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1650882572}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 68624a2d557e61e4f89448778232a6e6, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  dropdown1: {fileID: 1660203876}
+  dropdown2: {fileID: 1898579556}
+  algoritnmOptions:
+  - {fileID: 11400000, guid: 315df3f4af9edd245b59f07777c6c258, type: 2}
+  - {fileID: 11400000, guid: 592dd76a905e01d448c9a80d4b0087e8, type: 2}
+  - {fileID: 11400000, guid: 00e12c6897394ef4590a776b7f77fd22, type: 2}
+  - {fileID: 11400000, guid: 7b852f2f907533d438048c88b4307baf, type: 2}
 --- !u!1 &1660203874
 GameObject:
   m_ObjectHideFlags: 0
@@ -2206,7 +2228,6 @@ GameObject:
   - component: {fileID: 1660203878}
   - component: {fileID: 1660203877}
   - component: {fileID: 1660203876}
-  - component: {fileID: 1660203879}
   m_Layer: 5
   m_Name: Player1
   m_TagString: Untagged
@@ -2328,21 +2349,6 @@ CanvasRenderer:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 1660203874}
   m_CullTransparentMesh: 1
---- !u!114 &1660203879
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 1660203874}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 68624a2d557e61e4f89448778232a6e6, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  dropdown: {fileID: 1660203876}
-  optionsName:
-  - {fileID: 11400000, guid: 315df3f4af9edd245b59f07777c6c258, type: 2}
 --- !u!1 &1763874675
 GameObject:
   m_ObjectHideFlags: 0
@@ -2904,13 +2910,7 @@ MonoBehaviour:
   m_ItemImage: {fileID: 0}
   m_Value: 0
   m_Options:
-    m_Options:
-    - m_Text: Player 2
-      m_Image: {fileID: 0}
-    - m_Text: Negamax
-      m_Image: {fileID: 0}
-    - m_Text: Negamax AB
-      m_Image: {fileID: 0}
+    m_Options: []
   m_OnValueChanged:
     m_PersistentCalls:
       m_Calls: []
@@ -3589,7 +3589,19 @@ MonoBehaviour:
   m_TargetGraphic: {fileID: 2124539669}
   m_OnClick:
     m_PersistentCalls:
-      m_Calls: []
+      m_Calls:
+      - m_Target: {fileID: 12869464}
+        m_TargetAssemblyTypeName: GameManager, Assembly-CSharp
+        m_MethodName: StartMatch
+        m_Mode: 1
+        m_Arguments:
+          m_ObjectArgument: {fileID: 0}
+          m_ObjectArgumentAssemblyTypeName: UnityEngine.Object, UnityEngine
+          m_IntArgument: 0
+          m_FloatArgument: 0
+          m_StringArgument: 
+          m_BoolArgument: 0
+        m_CallState: 2
 --- !u!114 &2124539669
 MonoBehaviour:
   m_ObjectHideFlags: 0
