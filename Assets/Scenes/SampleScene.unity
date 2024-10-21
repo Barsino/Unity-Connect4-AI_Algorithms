@@ -154,10 +154,13 @@ MonoBehaviour:
   validPos: []
   boardSpawner: {fileID: 663356714}
   tokenPrefab: {fileID: 1656482233619238161, guid: fef42742860bf284ab0a3fbf819ec7b1, type: 3}
-  canPlay: 1
+  canPlay: 0
   player1: {fileID: 0}
   player2: {fileID: 0}
   playerSelector: {fileID: 1650882574}
+  algorithmOptions:
+  - {fileID: 11400000, guid: 334360883c6bbee4ba78ffc3d7a7db14, type: 2}
+  - {fileID: 11400000, guid: 36f6e8bab4d7a504aa167b22097f8cc1, type: 2}
 --- !u!4 &12869465
 Transform:
   m_ObjectHideFlags: 0
@@ -2211,11 +2214,7 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   dropdown1: {fileID: 1660203876}
   dropdown2: {fileID: 1898579556}
-  algoritnmOptions:
-  - {fileID: 11400000, guid: 315df3f4af9edd245b59f07777c6c258, type: 2}
-  - {fileID: 11400000, guid: 592dd76a905e01d448c9a80d4b0087e8, type: 2}
-  - {fileID: 11400000, guid: 00e12c6897394ef4590a776b7f77fd22, type: 2}
-  - {fileID: 11400000, guid: 7b852f2f907533d438048c88b4307baf, type: 2}
+  gameManager: {fileID: 12869464}
 --- !u!1 &1660203874
 GameObject:
   m_ObjectHideFlags: 0

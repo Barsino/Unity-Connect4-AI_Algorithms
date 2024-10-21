@@ -2,16 +2,15 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[CreateAssetMenu(menuName = "Player")]
+[CreateAssetMenu(fileName = "Player")]
 public class Player : Algorithm
 {
+    public override string AlgorithmName
+    {
+        get { return this.name; }
+    }
     public override Vector2Int DecideMove(BoardSpawner board, int player)
     {
         return Vector2Int.zero;
-    }
-
-    public override int ChangeTurn(int actualPlayer)
-    {
-        return actualPlayer == 1 ? 2 : 1;
     }
 }

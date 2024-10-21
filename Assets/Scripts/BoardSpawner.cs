@@ -19,6 +19,9 @@ public class BoardSpawner : MonoBehaviour
     private GameObject[,] board;
     public GameObject[,] Board { get { return board; } }
 
+    private int[,] intBoard;
+    public int[,] IntBoard { get { return intBoard; } }
+
     private void Start()
     {
         board = new GameObject[numColumns, numRows];
@@ -50,6 +53,7 @@ public class BoardSpawner : MonoBehaviour
                 }
 
                 board[column, row] = tileInstance;
+                intBoard[column, row] = 0;
             }
         }
     }

@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.VisualScripting;
 using UnityEngine;
 
 public class Tile : MonoBehaviour
@@ -40,21 +41,15 @@ public class Tile : MonoBehaviour
     }
 	public void OnMouseDown()
 	{
-        if(gameManager.Player1.GetType() == typeof (Player))
+        if (gameManager.canPlay && gameManager.isPlayer && !isOccupied)
         {
-            if (!isOccupied)
+            // Verificar si el clic corresponde a una posición válida
+            if (InValidPos(gameManager.ValidPos))
             {
-                if (gameManager.canPlay)
-                {
-                    // Verificar si el clic corresponde a una posición válida
-                    if (InValidPos(gameManager.ValidPos))
-                    {
-                        gameManager.PlaceToken((int)boardPos.x);  // Llamar al GameManager para colocar el token
-                        isOccupied = true;
-                    }
-                }
+                gameManager.PlaceToken((int)boardPos.x);  // Llamar al GameManager para colocar el token
+                isOccupied = true;
             }
-        }
+        }        
     }
 
     private bool InValidPos(Vector2[] validPos)
