@@ -164,6 +164,7 @@ MonoBehaviour:
   algorithmOptions:
   - {fileID: 11400000, guid: 334360883c6bbee4ba78ffc3d7a7db14, type: 2}
   - {fileID: 11400000, guid: 36f6e8bab4d7a504aa167b22097f8cc1, type: 2}
+  - {fileID: 11400000, guid: da61519e1ac81964aba712f829eb9a91, type: 2}
   endGameText: {fileID: 282598187}
   endImageBackground: {fileID: 1502363848}
   startImage: {fileID: 1490720713}
