@@ -13,7 +13,7 @@ public class Tile : MonoBehaviour
 
     [SerializeField] private Vector2 boardPos;
 	
-	[SerializeField] private bool isOccupied = false;
+	public bool isOccupied = false;
 	public bool IsOccupied { get { return isOccupied; } }
 	
 

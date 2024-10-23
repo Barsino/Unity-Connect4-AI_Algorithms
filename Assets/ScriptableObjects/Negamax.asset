@@ -12,4 +12,5 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 75c4e72043cfef44b8a516ebed47343a, type: 3}
   m_Name: Negamax
   m_EditorClassIdentifier: 
-  turn: 0
+  gameManager: {fileID: 0}
+  depth: 5

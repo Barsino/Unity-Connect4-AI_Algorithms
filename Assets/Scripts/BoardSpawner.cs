@@ -19,12 +19,14 @@ public class BoardSpawner : MonoBehaviour
     private GameObject[,] board;
     public GameObject[,] Board { get { return board; } }
 
-    private int[,] intBoard;
-    public int[,] IntBoard { get { return intBoard; } }
+    public int[,] intBoard;
+    //public int[,] IntBoard { get { return intBoard; } }
 
     private void Start()
     {
-        board = new GameObject[numColumns, numRows];
+        board    = new GameObject[numColumns, numRows];
+        intBoard = new int       [numColumns, numRows];
+
         CreateBoard();
     }
 
@@ -37,6 +39,8 @@ public class BoardSpawner : MonoBehaviour
             {
                 // Instatiate tile
                 GameObject tileInstance = Instantiate(tilePrefab, new Vector3(0, 0, 0), Quaternion.identity);
+
+                tileInstance.tag = "Tile";
 
                 tileInstance.GetComponent<SpriteRenderer>().color = ((column + row) % 2 == 0) ? Color.white : Color.gray;
 

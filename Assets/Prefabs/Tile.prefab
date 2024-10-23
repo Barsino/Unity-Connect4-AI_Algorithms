@@ -14,7 +14,7 @@ GameObject:
   - component: {fileID: 6200440816891256987}
   m_Layer: 0
   m_Name: Tile
-  m_TagString: Untagged
+  m_TagString: Tile
   m_Icon: {fileID: 0}
   m_NavMeshLayer: 0
   m_StaticEditorFlags: 0
@@ -99,6 +99,9 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   spriteRenderer: {fileID: 0}
+  gameManager: {fileID: 0}
+  boardPos: {x: 0, y: 0}
+  isOccupied: 0
 --- !u!61 &6200440816891256987
 BoxCollider2D:
   m_ObjectHideFlags: 0

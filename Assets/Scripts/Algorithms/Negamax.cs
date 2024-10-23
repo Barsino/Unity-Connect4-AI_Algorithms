@@ -12,18 +12,43 @@ public class Negamax : Algorithm
 
     [SerializeField] private int depth;
 
-    public override Vector2Int DecideMove(BoardSpawner board, int player)
+    public override Vector2Int DecideMove(int[,] board, int player)
     {
-        return NegamaxAlgorithm(board, depth, player);
+        Vector2Int bestMove = NegamaxAlgorithm(board, depth, player);
+
+        return bestMove;
     }
 
-    private Vector2Int NegamaxAlgorithm(BoardSpawner board, int depth, int player)
+    private Vector2Int NegamaxAlgorithm(int[,] board, int depth, int player)
     {
-        byte bestMove = 0;
+        int bestMove = -1;
         int bestScore = int.MinValue;
-        int currentScore;
 
-        //if(depth == 0)
-        return Vector2Int.zero;
+        if(depth == 0 || IsEndOfGame(board, player))
+        {
+            int score = Evaluate(board, player);
+            return new Vector2Int(score, -1);
+        }
+
+        List<Vector2> validPos = GetValidPos(board);
+
+        foreach (Vector2 pos in validPos)
+        {
+            int[,] newBoard = (int[,])board.Clone();
+
+            newBoard[(int)pos.x, (int)pos.y] = player;
+
+            Vector2Int scoringMove = NegamaxAlgorithm(newBoard, depth - 1, ChangeTurn(player));
+
+            int currentScore = -scoringMove.x;
+
+            if(currentScore > bestScore)
+            {
+                bestScore = currentScore;
+                bestMove  = (int)pos.x;
+            }
+        }
+
+        return new Vector2Int(bestScore, bestMove);
     }
 }
