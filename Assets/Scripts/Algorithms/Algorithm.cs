@@ -33,16 +33,14 @@ public abstract class Algorithm : ScriptableObject
 
         // Puntuacion por columnas centrales (favorece colocar fichas en el centro)
         int centerColumn = columns / 2;
-        int centerOpponentCount = 0;
         int centerPlayerCount = 0;
+
         for (int row = 0; row < rows; row++)
         {
             if (board[centerColumn, row] == player) { centerPlayerCount++; }
-            else if (board[centerColumn, row] == opponent) { centerOpponentCount++; }
         }
 
         score += centerPlayerCount * 3;
-        score -= centerOpponentCount * 3;
 
         // Evaluar todas las posiciones posibles de 4 en linea
         for(int column = 0; column < columns; column++)
@@ -129,17 +127,17 @@ public abstract class Algorithm : ScriptableObject
         }
 
         // Asignar puntaje basado en la cantidad de fichas del jugador o del oponente en el grupo
-        if (playerCount == 4) { score += 200; }// Ganar
+        if (playerCount == 4) { score += 100; }// Ganar
 
         else if (playerCount == 3 && emptyCount == 1) { score += 5; }// Tres en línea con un espacio
 
         else if (playerCount == 2 && emptyCount == 2) { score += 2; }// Dos en línea con dos espacios
 
-        if (opponentCount == 4) { score -= 100; }// Oponente gana
+        //if (opponentCount == 4) { score -= 100; }// Oponente gana
 
-        else if (opponentCount == 3 && emptyCount == 1) { score -= 15; }// Oponente con tres en línea
+        else if (opponentCount == 3 && emptyCount == 1) { score -= 10; }// Oponente con tres en línea
 
-        else if (opponentCount == 2 && emptyCount == 2) { score -= 6; }// Oponente con dos en línea
+        else if (opponentCount == 2 && emptyCount == 2) { score -= 4; }// Oponente con dos en línea
 
         return score;
     }

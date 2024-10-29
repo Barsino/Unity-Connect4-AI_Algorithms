@@ -10,7 +10,7 @@ public class Negamax_AB : Algorithm
         get { return this.name; }
     }
 
-    [SerializeField] private int depth;
+    [SerializeField] protected int depth;
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
@@ -19,7 +19,7 @@ public class Negamax_AB : Algorithm
         return bestMove;
     }
 
-    private Vector2Int NegamaxAB_Algorithm(int[,] board, int player, int depth, int alpha, int beta)
+    protected Vector2Int NegamaxAB_Algorithm(int[,] board, int player, int depth, int alpha, int beta)
     {
         int bestMove = -1;
         int bestScore = int.MinValue;
@@ -32,10 +32,13 @@ public class Negamax_AB : Algorithm
 
         List<Vector2> validPos = GetValidPos(board);
 
+        // Ordenar los movimientos válidos utilizando la función Evaluate()
+        validPos.Sort((pos1, pos2) => Move_Ordering(board, (int)pos2.x, (int)pos2.y, player).CompareTo(
+                                      Move_Ordering(board, (int)pos1.x, (int)pos1.y, player)));
+
         foreach (Vector2 pos in validPos)
         {
             int[,] newBoard = (int[,])board.Clone();
-
             newBoard[(int)pos.x, (int)pos.y] = player;
 
             Vector2Int scoringMove = NegamaxAB_Algorithm(newBoard, ChangeTurn(player), depth - 1, -beta, -Mathf.Max(alpha, bestScore));
@@ -55,5 +58,14 @@ public class Negamax_AB : Algorithm
         }
 
         return new Vector2Int(bestScore, bestMove);
+    }
+
+    private int Move_Ordering(int[,] board, int x, int y, int player)
+    {
+        int[,] newBoard = (int[,])board.Clone();
+
+        newBoard[x, y] = player;
+
+        return Evaluate(newBoard, player);
     }
 }
