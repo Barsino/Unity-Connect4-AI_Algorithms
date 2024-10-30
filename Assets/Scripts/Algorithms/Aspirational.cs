@@ -20,35 +20,35 @@ public class Aspirational : Negamax_AB
         return Vector2Int.zero;
     }
 
-    //private Vector2Int AspirationalSearch(int[,] board, int player)
-    //{
-    //    int alpha, beta;
-    //    Vector2Int move;
+    private Vector2Int AspirationalSearch(int[,] board, int player)
+    {
+        int alpha, beta;
+        Vector2Int move;
 
-    //    if(previousScore != 0)
-    //    {
-    //        alpha = previousScore - windowRange;
-    //        beta  = previousScore + windowRange;
+        if (previousScore != 0)
+        {
+            alpha = previousScore - windowRange;
+            beta = previousScore + windowRange;
 
-    //        while(true)
-    //        {
-    //            move = NegamaxAB_Algorithm(board, player, depth, alpha, beta);
+            while (true)
+            {
+                move = NegamaxAB_Algorithm(board, player, depth, alpha, beta);
 
-    //            if(move.x <= alpha) { alpha = int.MinValue; }
+                if (move.x <= alpha) { alpha = int.MinValue; }
 
-    //            else if(move.x >= beta) { beta = int.MaxValue; }
+                else if (move.x >= beta) { beta = int.MaxValue; }
 
-    //            else { break; }
-    //        }
+                else { break; }
+            }
 
-    //        previousScore = move.x;
-    //    }
-    //    else
-    //    {
-    //        move = NegamaxAB_Algorithm(board, player, depth, int.MinValue, int.MaxValue);
-    //        previousScore = move.x;
-    //    }
+            previousScore = move.x;
+        }
+        else
+        {
+            move = NegamaxAB_Algorithm(board, player, depth, int.MinValue, int.MaxValue);
+            previousScore = move.x;
+        }
 
-    //    return move;
-    //}
+        return move;
+    }
 }
