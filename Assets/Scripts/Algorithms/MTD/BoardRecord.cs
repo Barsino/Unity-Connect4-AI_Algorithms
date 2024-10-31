@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class BoardRecord : MonoBehaviour
+public class BoardRecord
 {
     public int hashValue;
     public int minScore;

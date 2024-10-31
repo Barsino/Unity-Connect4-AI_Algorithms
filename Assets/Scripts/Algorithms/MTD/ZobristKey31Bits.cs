@@ -6,6 +6,8 @@ public class ZobristKey31Bits
 {
     private int[,] keys;
     private int boardPositions, numberOfPieces;
+    public int BoardPositions { get { return boardPositions; } }
+    public int NumberOfPieces { get { return numberOfPieces; } }
 
     public ZobristKey31Bits(int _boardPositions, int _numberOfPieces)
     {

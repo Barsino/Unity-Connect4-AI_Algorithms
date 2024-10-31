@@ -2,7 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class TranspositionTable : MonoBehaviour
+public class TranspositionTable
 {
     private int length;
     Dictionary<int, BoardRecord> records;
