@@ -9,13 +9,16 @@ public abstract class Algorithm : ScriptableObject
 
     [SerializeField] private GameManager gameManager;
 
+    // Metodo que devuelve el mejor movimiento elejido por el correspondiente algoritmo
     public abstract Vector2Int DecideMove(int[,] board, int player);
 
+    // Cambiar de turno
     public int ChangeTurn(int actualPlayer)
     {
         return actualPlayer == 1 ? 2 : 1;
     }
 
+    // Comprobar si el juego ha terminado(victoria o empate)
     protected bool IsEndOfGame(int[,] board, int player)
     {
         if(CheckWin(board, player) || CheckDraw(board)) { return true; }
@@ -249,6 +252,8 @@ public abstract class Algorithm : ScriptableObject
     {
         gameManager = gM;
     }
+
+    // Obtener las posiciones validas donde colocar una ficha
     protected List<Vector2> GetValidPos(int[,] board)
     {
         int columns = board.GetLength(0);

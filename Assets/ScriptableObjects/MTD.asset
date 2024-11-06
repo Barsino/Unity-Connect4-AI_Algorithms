@@ -13,4 +13,5 @@ MonoBehaviour:
   m_Name: MTD
   m_EditorClassIdentifier: 
   gameManager: {fileID: 0}
+  maxDepth: 6
   max_Iterations: 5

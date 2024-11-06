@@ -11,12 +11,11 @@ public class ZobristKey31Bits
 
     public ZobristKey31Bits(int _boardPositions, int _numberOfPieces)
     {
-        System.Random rdn = new System.Random();
-
         boardPositions = _boardPositions;
         numberOfPieces = _numberOfPieces;
 
         keys = new int[boardPositions, numberOfPieces];
+        System.Random rdn = new System.Random();
 
         for(int i = 0; i < boardPositions; i++)
         {

@@ -12,12 +12,12 @@ public class TranspositionTable
     public TranspositionTable(int _length)
     {
         length = _length;
-        records = new Dictionary<int, BoardRecord>();
+        records = new Dictionary<int, BoardRecord>(length);
     }
 
     public void SaveRecord(BoardRecord record)
     {
-        records[record.hashValue % length] = record;
+        records[record.hashValue] = record;
     }
 
     public BoardRecord GetRecord(int hash)
@@ -25,11 +25,11 @@ public class TranspositionTable
         BoardRecord record;
         int key = hash % length;
 
-        if(records.ContainsKey(key))
+        if (records.ContainsKey(key))
         {
             record = records[key];
 
-            if(record.hashValue == hash) { return record; }
+            if (record.hashValue == hash) { return record; }
 
             else { return null; }
         }
@@ -37,5 +37,8 @@ public class TranspositionTable
         {
             return null;
         }
+
+        //records.TryGetValue(hash, out BoardRecord record);
+        //return record;
     }
 }

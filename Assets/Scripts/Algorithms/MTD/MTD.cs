@@ -10,8 +10,8 @@ public class MTD : Algorithm
         get { return this.name; }
     }
 
-    [SerializeField] private int maxDepth = 8;
-    [SerializeField] private int max_Iterations = 10;
+    [SerializeField] private int maxDepth = 6;
+    [SerializeField] private int max_Iterations = 5;
     private int globalGuess = int.MaxValue;
 
     private TranspositionTable transpositionTable;
@@ -35,9 +35,8 @@ public class MTD : Algorithm
     {
         hash = CalculateHash(board, player);
 
-        Vector2Int bestMove = MTD_Algorithm(board, max_Iterations, globalGuess, player);
+        Vector2Int bestMove = MTD_Algorithm(board, maxDepth, globalGuess, player);
 
-        globalGuess = bestMove.y;
         return bestMove;
     }
 
@@ -60,89 +59,51 @@ public class MTD : Algorithm
             }
         }
 
+        Debug.Log(bestMove.x + "H");
+        globalGuess = guess;
         return bestMove;
     }
 
     private Vector2Int Test(int[,] board, int depth, int gamma, int player)
     {
-        if(depth == 0 || IsEndOfGame(board, player))
-        {
-            int score = Evaluate(board, player);
-            return new Vector2Int(score, -1);
-        }
+        int bestMove, bestScore;
+        Vector2Int scoringMove;
+        BoardRecord record;
 
-        BoardRecord record = transpositionTable.GetRecord(hash);
-        
-        if(record != null && record.depth >= maxDepth - depth)
-        {
-            if(record.minScore > gamma) { return new Vector2Int(record.minScore, record.bestMove); }
+        record = transpositionTable.GetRecord(hash);
 
-            if(record.maxScore < gamma) { return new Vector2Int(record.maxScore, record.bestMove); }
+        // Si hay registro de este tablero
+        if (record != null)
+        {
+            // Profundidad adecuada
+            if (record.depth > depth - 1)
+            {
+                // Si el score se ajusta al valor gamma que arrastramos, entonces devolvemos la jugada adecuada.
+                if (record.minScore > gamma)
+                {
+                    scoringMove = new Vector2Int((int)record.minScore, (int)record.bestMove);
+                    return scoringMove;
+                }
+
+                if (record.maxScore < gamma)
+                {
+                    scoringMove = new Vector2Int((int)record.maxScore, (int)record.bestMove);
+                    return scoringMove;
+                }
+            }
         }
+        // No hay registro. Se inicializa el tablero
         else
         {
-            record = new BoardRecord()
-            {
-                hashValue = hash,
-                depth = maxDepth - depth,
-                minScore = int.MinValue,
-                maxScore = int.MaxValue
-            };
+            record = new BoardRecord();
+            record.hashValue = hash;
+            record.depth = depth;
+            record.minScore = int.MinValue;
+            record.maxScore = int.MaxValue;
         }
-
-        int bestScore = int.MinValue;
-        int bestMove = -1;
-
-        List<Vector2> validPos = GetValidPos(board);
-
-        foreach(Vector2 pos in validPos)
-        {
-            int[,] newBoard = (int[,])board.Clone();
-            newBoard[(int)pos.x, (int)pos.y] = player;
-        }
-
-        return Vector2Int.zero;
-        /*//int bestMove, bestScore;
-        //Vector2Int scoringMove;
-        //BoardRecord record;
-
-        //// Buscar si ya tenemos un registro del tablero en la tabla de trasposición.
-        //// TODO -> check implementation
-        //// record = transpositionTable.GetRecord (board.hashValue);
-        //record = transpositionTable.GetRecord(0);
-
-        //// Si hay registro de este tablero
-        //if(record != null)
-        //{
-        //    // Profundidad adecuada
-        //    if(record.depth > depth - 1)
-        //    {
-        //        // Si el score se ajusta al valor gamma que arrastramos, entonces devolvemos la jugada adecuada.
-        //        if(record.minScore > gamma)
-        //        {
-        //            scoringMove = new Vector2Int((int)record.minScore, (int)record.bestMove);
-        //            return scoringMove;
-        //        }
-
-        //        if(record.maxScore < gamma)
-        //        {
-        //            scoringMove = new Vector2Int((int)record.maxScore, (int)record.bestMove);
-        //            return scoringMove;
-        //        }
-        //    }
-        //}
-        //// No hay registro. Se inicializa el tablero
-        //else
-        //{
-        //    record = new BoardRecord();
-        //    //record.hashValue = board.hashValue;
-        //    record.depth = depth;
-        //    record.minScore = int.MinValue;
-        //    record.maxScore = int.MaxValue;
-        //}
 
         // Buscamos jugada
-        if(depth == 0 || IsEndOfGame(board, player))
+        if (depth == 0 || IsEndOfGame(board, player))
         {
             record.maxScore = Evaluate(board, player);
             record.minScore = record.maxScore;
@@ -172,6 +133,7 @@ public class MTD : Algorithm
                 {
                     record.bestMove = bestMove;
                     bestScore = invertedScore;
+                    bestMove = (int)pos.x;
                 }
 
                 if(bestScore < gamma)
@@ -185,10 +147,10 @@ public class MTD : Algorithm
             }
 
             transpositionTable.SaveRecord(record);
-            scoringMove = new Vector2Int((int)bestMove, (int)bestScore);
+            scoringMove = new Vector2Int(bestScore, bestMove);
         }
 
-        return scoringMove;*/
+        return scoringMove;
     }
 
     private int CalculateHash(int[,] board, int player)
@@ -209,8 +171,16 @@ public class MTD : Algorithm
             {
                 if (board[column, row] != 0)
                 {
-                    int piece = board[column, row] == player ? player : ChangeTurn(player);
+                    int piece = board[column, row] == player ? 1 : 0;
                     int position = column * rows + row;
+
+                    Debug.Log($"Position: {position}, Piece: {piece}");
+                    if (position >= zobristKey.BoardPositions || piece >= zobristKey.NumberOfPieces)
+                    {
+                        Debug.LogError("Índice fuera de los límites en ZobristKey");
+                        continue; // o maneja el caso según lo necesites
+                    }
+
                     hashValue ^= zobristKey.GetKeys(position, piece);
                 }
             }
