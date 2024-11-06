@@ -10,11 +10,14 @@ public class MTD : Algorithm
         get { return this.name; }
     }
 
-    private int hashTableLength = 9000000;
-    private int globalGuess = int.MaxValue;
+    [SerializeField] private int maxDepth = 8;
     [SerializeField] private int max_Iterations = 10;
+    private int globalGuess = int.MaxValue;
+
     private TranspositionTable transpositionTable;
     private ZobristKey31Bits zobristKey;
+    private int hashTableLength = 90000000;
+    private int hash;
 
     private void OnEnable()
     {
@@ -30,18 +33,22 @@ public class MTD : Algorithm
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
-        globalGuess = Evaluate(board, player);
-        return MTD_Algorithm(board, max_Iterations, player);
+        hash = CalculateHash(board, player);
+
+        Vector2Int bestMove = MTD_Algorithm(board, max_Iterations, globalGuess, player);
+
+        globalGuess = bestMove.y;
+        return bestMove;
     }
 
-    private Vector2Int MTD_Algorithm(int[,] board, int _depth, int player)
+    private Vector2Int MTD_Algorithm(int[,] board, int _depth, int initialGuess, int player)
     {
-        int gamma, guess = globalGuess;
+        int guess = initialGuess;
         Vector2Int bestMove = new Vector2Int(0, 0);
 
         for(int i = 0; i < max_Iterations; i++)
         {
-            gamma = guess;
+            int gamma = guess;
 
             bestMove = Test(board, _depth, gamma - 1, player);
 
@@ -49,70 +56,52 @@ public class MTD : Algorithm
 
             if(gamma == guess)
             {
-                globalGuess = guess;
-                return bestMove;
+                break;
             }
         }
 
-        globalGuess = guess;
         return bestMove;
     }
 
     private Vector2Int Test(int[,] board, int depth, int gamma, int player)
     {
-        int bestMove = 0;
-        int bestScore = int.MinValue;
-        //Vector2Int scoringMove;
-        List<Vector2> validPos = GetValidPos(board);
-
-        int hash = GenerateHash(board);
-        BoardRecord record = transpositionTable.GetRecord(hash);
-
-        if(record != null && record.depth >= depth)
-        {
-            if (record.minScore >= gamma) return new Vector2Int(record.minScore, record.bestMove);
-
-            if (record.maxScore <= gamma) return new Vector2Int(record.maxScore, record.bestMove);
-        }
-        else
-        {
-            record = new BoardRecord { hashValue = hash, depth = depth, minScore = int.MinValue, maxScore = int.MaxValue };
-        }
-
         if(depth == 0 || IsEndOfGame(board, player))
         {
             int score = Evaluate(board, player);
-            record = new BoardRecord { hashValue = GenerateHash(board), depth = depth, minScore = score, maxScore = score, bestMove = -1 };
-            transpositionTable.SaveRecord(record);
             return new Vector2Int(score, -1);
         }
 
-        foreach (Vector2 pos in validPos)
+        BoardRecord record = transpositionTable.GetRecord(hash);
+        
+        if(record != null && record.depth >= maxDepth - depth)
+        {
+            if(record.minScore > gamma) { return new Vector2Int(record.minScore, record.bestMove); }
+
+            if(record.maxScore < gamma) { return new Vector2Int(record.maxScore, record.bestMove); }
+        }
+        else
+        {
+            record = new BoardRecord()
+            {
+                hashValue = hash,
+                depth = maxDepth - depth,
+                minScore = int.MinValue,
+                maxScore = int.MaxValue
+            };
+        }
+
+        int bestScore = int.MinValue;
+        int bestMove = -1;
+
+        List<Vector2> validPos = GetValidPos(board);
+
+        foreach(Vector2 pos in validPos)
         {
             int[,] newBoard = (int[,])board.Clone();
             newBoard[(int)pos.x, (int)pos.y] = player;
-
-            Vector2Int scoreMove = Test(newBoard, depth - 1, -gamma, ChangeTurn(player));
-            int invertedScore = -scoreMove.x;
-
-            if (invertedScore > bestScore)
-            {
-                bestMove = (int)pos.x;
-                bestScore = invertedScore;
-            }
-
-            if (bestScore >= gamma)
-            { 
-                record.maxScore = bestScore;
-                transpositionTable.SaveRecord(record);
-                return new Vector2Int(bestMove, bestScore);
-            }
-
-            else { record.minScore = bestScore; }
         }
 
-        transpositionTable.SaveRecord(record);
-        return new Vector2Int(bestScore, bestMove);
+        return Vector2Int.zero;
         /*//int bestMove, bestScore;
         //Vector2Int scoringMove;
         //BoardRecord record;
@@ -202,9 +191,9 @@ public class MTD : Algorithm
         return scoringMove;*/
     }
 
-    private int GenerateHash(int[,] board)
+    private int CalculateHash(int[,] board, int player)
     {
-        int hash = 0;
+        int hashValue = 0;
         int columns = board.GetLength(0);
         int rows = board.GetLength(1);
 
@@ -216,30 +205,16 @@ public class MTD : Algorithm
 
         for (int column = 0; column < columns; column++)
         {
-            for(int row = 0; row < rows; row++)
+            for (int row = 0; row < rows; row++)
             {
                 if (board[column, row] != 0)
                 {
-                    int position = column * rows + row;  // Calcula la posición correctamente.
-
-                    // Verifica si está dentro de los límites antes de acceder a `GetKeys`
-                    if (position < zobristKey.BoardPositions && board[column, row] < zobristKey.NumberOfPieces)
-                    {
-                        Debug.Log("Position: (" + column + "," + row + ") Value: " + board[column, row]);
-                        hash ^= zobristKey.GetKeys(position, board[column, row]);
-                    }
-                    else
-                    {
-                        Debug.Log("Índice fuera de límites: posición " + position + ", pieza " + board[column, row]);
-                    }
-                }
-                else
-                {
-                    Debug.Log("Casilla vacía en Position: (" + column + "," + row + ")");
+                    int piece = board[column, row] == player ? player : ChangeTurn(player);
+                    int position = column * rows + row;
+                    hashValue ^= zobristKey.GetKeys(position, piece);
                 }
             }
         }
-
-        return hash;
+        return hashValue;
     }
 }

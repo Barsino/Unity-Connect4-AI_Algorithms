@@ -16,8 +16,7 @@ public class Aspirational : Negamax_AB
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
-        //return AspirationalSearch(board, player);
-        return Vector2Int.zero;
+        return AspirationalSearch(board, player);
     }
 
     private Vector2Int AspirationalSearch(int[,] board, int player)

@@ -123,6 +123,7 @@ public class GameManager : MonoBehaviour
 
 
         // Mover el token a la primera posición válida en la columna
+        Debug.Log(column);
         Vector2 targetPosition = validPos[column];
         Vector3 localTargetPosition = boardSpawner.transform.TransformPoint(new Vector3(targetPosition.x, targetPosition.y, 0));
 
