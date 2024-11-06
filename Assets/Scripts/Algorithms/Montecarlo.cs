@@ -10,10 +10,12 @@ public class Montecarlo : Algorithm
         get { return this.name; }
     }
 
+    // Número de simulaciones a realizar.
     [SerializeField] private int simulations;
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
+        // Llama al algoritmo de Monte Carlo
         return MontecarloAlgorithm(board, player);
     }
 
@@ -22,17 +24,21 @@ public class Montecarlo : Algorithm
         int bestMove = -1;
         int bestWinCount = -1;
 
+        // Obtiene todas las posiciones válidas
         List<Vector2> validPos = GetValidPos(board);
 
-        foreach(Vector2 pos in validPos)
+        // Recorre todas las posiciones válidas
+        foreach (Vector2 pos in validPos)
         {
             int winCount = 0;
 
-            for(int i = 0; i < simulations; i++)
+            // Realiza varias simulaciones para cada movimiento.
+            for (int i = 0; i < simulations; i++)
             {
                 int[,] newBoard = (int[,])board.Clone();
                 newBoard[(int)pos.x, (int)pos.y] = player;
 
+                // Simula el juego con el movimiento aplicado.
                 int result = SimulateGame(newBoard, ChangeTurn(player));
 
                 if(result == player)
@@ -55,8 +61,10 @@ public class Montecarlo : Algorithm
     {
         int gameValue;
 
-        while(!IsEndOfGame(board, player))
+        // Continúa simulando hasta que se termine el juego
+        while (!IsEndOfGame(board, player))
         {
+            // Obtiene los movimientos válidos y selecciona uno aleatoriamente.
             List<Vector2> moves = GetValidPos(board);
             Vector2 randomMove = moves[Random.Range(0, moves.Count)];
             board[(int)randomMove.x, (int)randomMove.y] = player;
@@ -64,7 +72,8 @@ public class Montecarlo : Algorithm
             player = ChangeTurn(player);
         }
 
-        if(CheckDraw(board))
+        // Verifica el resultado del juego: empate o victoria
+        if (CheckDraw(board))
         { 
             gameValue = 0; 
         }

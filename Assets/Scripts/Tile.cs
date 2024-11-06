@@ -31,6 +31,7 @@ public class Tile : MonoBehaviour
         boardPos = pos;
     }
 
+    // Cambiar color del tile
     private void OnMouseEnter()
     {
         spriteRenderer.color = new Color(0f, 1f, 0f, 0.5f);

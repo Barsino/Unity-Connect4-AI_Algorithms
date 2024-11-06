@@ -37,7 +37,7 @@ public class GameManager : MonoBehaviour
     // Seleccionador de jugadores
     public PlayerSelector playerSelector;
 
-    // Lista de opciones de algoritmos (IA o Player) disponibles
+    // Lista de opciones de algoritmos (IA o Player)
     [SerializeField] private List<Algorithm> algorithmOptions = new List<Algorithm>();
     public List<Algorithm> AlgorithmsOptions { get { return algorithmOptions; } }
 
@@ -110,10 +110,11 @@ public class GameManager : MonoBehaviour
         canPlay = false;
 
         // Instanciar el token en la parte superior de la columna seleccionada
-        Vector3 spawnPosition = new Vector3(column, boardSpawner.NumRows, 0); // Parte superior
+        Vector3 spawnPosition = new Vector3(column, boardSpawner.NumRows, 0); 
         GameObject tokenInstance = Instantiate(tokenPrefab, spawnPosition, Quaternion.identity);
         tokenInstance.tag = "Token";
 
+        // Seleccionar color segun el jugador(Rojo -> p1, Amarillo -> p2)
         tokenInstance.GetComponent<SpriteRenderer>().color = currentPlayerTurn == 1 ? Color.red : Color.yellow;
         tokenInstance.GetComponent<SpriteRenderer>().sortingOrder = 1;
 
@@ -127,11 +128,10 @@ public class GameManager : MonoBehaviour
 
         // Actualizar la posición válida de la columna
         validPos[column] = new Vector2(column, validPos[column].y + 1);
-
         boardSpawner.intBoard[column, (int)validPos[column].y - 1] = currentPlayerTurn;
 
+        // Iniciar la 'animacion' del token
         StartCoroutine(MoveToken(tokenInstance, localTargetPosition));
-
     }
 
     private IEnumerator MoveToken(GameObject token, Vector2 targetPosition)
@@ -147,8 +147,10 @@ public class GameManager : MonoBehaviour
             yield return null;
         }
 
-        token.transform.position = targetPosition;  // Asegurar que el token llegue a la posición final
+        // Asegurar que el token llegue a la posición final
+        token.transform.position = targetPosition;  
 
+        // Comprobar si el juego ha terminado
         if (CheckEnd()) { yield break; }
 
         // Cambiar de turno

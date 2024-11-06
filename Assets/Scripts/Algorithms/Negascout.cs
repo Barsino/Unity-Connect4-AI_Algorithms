@@ -12,8 +12,8 @@ public class Negascout : Negamax_AB
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
-        //return NegascoutAB_Algorithm(board, player, depth, 0, int.MinValue, int.MaxValue);
-        return Vector2Int.zero;
+        // Llama al método NegascoutAB_Algorithm
+        return NegascoutAB_Algorithm(board, player, depth, 0, int.MinValue, int.MaxValue);
     }
 
     private Vector2Int NegascoutAB_Algorithm(int[,] board, int player, int depth, int currentDepth, int alpha, int beta)
@@ -22,14 +22,17 @@ public class Negascout : Negamax_AB
         int bestScore = int.MinValue;
         int adaptiveBeta = beta;
 
+        // Comprueba si se ha alcanzado la profundidad máxima o el final del juego. Si es así, evalúa el tablero actual.
         if (depth == 0 || IsEndOfGame(board, player))
         {
             int score = Evaluate(board, player);
             return new Vector2Int(score, -1);
         }
 
+        // Obtiene todas las posiciones válidas
         List<Vector2> validpos = GetValidPos(board);
 
+        // Itera sobre cada posición válida para evaluar su puntaje y determinar el mejor movimiento.
         foreach (Vector2 pos in validpos)
         {
             int[,] newBoard = (int[,])board.Clone();
@@ -50,6 +53,7 @@ public class Negascout : Negamax_AB
                 }
                 else
                 {
+                    // Llamada adicional para verificar si se puede ajustar el puntaje con un beta más alto
                     Vector2Int negativeBestScore = NegascoutAB_Algorithm(newBoard, ChangeTurn(player), depth, currentDepth + 1, -beta, -currentScore);
                 }
             }
@@ -59,6 +63,7 @@ public class Negascout : Negamax_AB
                 return new Vector2Int(bestScore, bestMove);
             }
 
+            // Ajusta adaptiveBeta para la próxima iteración, aumentando ligeramente por encima del valor de alpha.
             adaptiveBeta = Mathf.Max(alpha, bestScore) + 1;
         }
 

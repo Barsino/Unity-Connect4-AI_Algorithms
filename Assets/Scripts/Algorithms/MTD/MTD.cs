@@ -10,19 +10,26 @@ public class MTD : Algorithm
         get { return this.name; }
     }
 
+    // Profundidad máxima de búsqueda
     [SerializeField] private int maxDepth = 6;
+
+    // Número máximo de iteraciones en la búsqueda MTD
     [SerializeField] private int max_Iterations = 5;
+
     private int globalGuess = int.MaxValue;
 
+    // Tabla de transposición y claves de Zobrist
     private TranspositionTable transpositionTable;
     private ZobristKey31Bits zobristKey;
+
+    // Longitud de la tabla hash de transposición
     private int hashTableLength = 90000000;
     private int hash;
 
     private void OnEnable()
     {
+        // Inicializa la clave Zobrist para el hash y la tabla de transposición
         zobristKey = new ZobristKey31Bits(42, 2);
-
         transpositionTable = new TranspositionTable(hashTableLength);
 
         if (zobristKey == null || transpositionTable == null)
@@ -33,8 +40,10 @@ public class MTD : Algorithm
 
     public override Vector2Int DecideMove(int[,] board, int player)
     {
+        // Calcula el hash del tablero para el jugador actual
         hash = CalculateHash(board, player);
 
+        // Llama al algoritmo MTD
         Vector2Int bestMove = MTD_Algorithm(board, maxDepth, globalGuess, player);
 
         return bestMove;
@@ -45,10 +54,12 @@ public class MTD : Algorithm
         int guess = initialGuess;
         Vector2Int bestMove = new Vector2Int(0, 0);
 
-        for(int i = 0; i < max_Iterations; i++)
+        // Realiza iteraciones para ajustar guess
+        for (int i = 0; i < max_Iterations; i++)
         {
             int gamma = guess;
 
+            // Ejecuta una prueba con guess ajustado
             bestMove = Test(board, _depth, gamma - 1, player);
 
             guess = bestMove.x;
@@ -59,7 +70,7 @@ public class MTD : Algorithm
             }
         }
 
-        Debug.Log(bestMove.x + "H");
+        // Actualiza la globalGuess para el siguiente movimiento
         globalGuess = guess;
         return bestMove;
     }
@@ -70,6 +81,7 @@ public class MTD : Algorithm
         Vector2Int scoringMove;
         BoardRecord record;
 
+        // Intenta obtener el registro de la tabla de transposición para el hash actual
         record = transpositionTable.GetRecord(hash);
 
         // Si hay registro de este tablero
@@ -102,7 +114,7 @@ public class MTD : Algorithm
             record.maxScore = int.MaxValue;
         }
 
-        // Buscamos jugada
+        // Caso base: si se alcanza la profundidad o se llega a un estado final del juego
         if (depth == 0 || IsEndOfGame(board, player))
         {
             record.maxScore = Evaluate(board, player);
@@ -111,7 +123,8 @@ public class MTD : Algorithm
 
             return new Vector2Int(record.maxScore, -1);
         }
-        // No es estado final o suspension
+
+        // Caso recursivo: si no es un estado final o se alcanza la profundidad máxima
         else
         {
             bestMove = 0;
@@ -136,7 +149,8 @@ public class MTD : Algorithm
                     bestMove = (int)pos.x;
                 }
 
-                if(bestScore < gamma)
+                // Actualiza los límites de la puntuación
+                if (bestScore < gamma)
                 {
                     record.maxScore = bestScore;
                 }
@@ -146,6 +160,7 @@ public class MTD : Algorithm
                 }
             }
 
+            // Guarda el registro en la tabla de transposición
             transpositionTable.SaveRecord(record);
             scoringMove = new Vector2Int(bestScore, bestMove);
         }
@@ -165,6 +180,7 @@ public class MTD : Algorithm
             return 0; // Devuelve un valor por defecto o lanza una excepción personalizada si es necesario.
         }
 
+        // Recorre el tablero y ajusta el hash según las piezas en cada posición
         for (int column = 0; column < columns; column++)
         {
             for (int row = 0; row < rows; row++)
@@ -181,6 +197,7 @@ public class MTD : Algorithm
                         continue; // o maneja el caso según lo necesites
                     }
 
+                    // Aplica la clave de Zobrist para obtener el hash del tablero
                     hashValue ^= zobristKey.GetKeys(position, piece);
                 }
             }
