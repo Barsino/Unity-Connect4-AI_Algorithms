@@ -147,6 +147,17 @@ public abstract class Algorithm : ScriptableObject
     #endregion
 
     #region Checkers
+    public bool CheckDraw(int[,] board)
+    {
+        //// Revisar empate comprobando si hay algún "0" en la ultiam fila del tablero
+        for (int column = 0; column < board.GetLength(0); column++)
+        {
+            if (board[column, board.GetLength(1) - 1] == 0) { return false; }
+        }
+
+        return true;
+    }
+
     public bool CheckWin(int[,] board, int player)
     {
         int columns = board.GetLength(0);
@@ -166,23 +177,6 @@ public abstract class Algorithm : ScriptableObject
         }
 
         return false;
-    }
-
-    public bool CheckDraw(int[,] board)
-    {
-        // Revisar si hay algún "0" en el tablero
-        for (int column = 0; column < board.GetLength(0); column++)
-        {
-            for (int row = 0; row < board.GetLength(1); row++)
-            {
-                if (board[column, row] == 0)
-                {
-                    return false; // Todavía hay espacio
-                }
-            }
-        }
-
-        return true;
     }
 
     // Comprobar ganador en horizontal
@@ -258,17 +252,16 @@ public abstract class Algorithm : ScriptableObject
     {
         int columns = board.GetLength(0);
         int rows = board.GetLength(1);
+
         List<Vector2> validPos = new List<Vector2>();
 
         for(int column = 0; column < columns; column++)
         {
-            for(int row = 0; row < rows; row++)
+            if (board[column, rows - 1] == 0)
             {
-                if (board[column, row] == 0)
-                {
-                    validPos.Add(new Vector2(column, row));
-                    break;
-                }
+                int row = 0;
+                while(row < rows && board[column, row] != 0) { row++; }
+                validPos.Add(new Vector2(column, row));
             }
         }
         return validPos;
